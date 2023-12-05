@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bouncing Balls</title>
+    <style>
+        canvas {
+            border: 1px solid #000;
+            display: block;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="bouncingBallsCanvas" width="800" height="400"></canvas>
+
+    <script>
+        const canvas = document.getElementById('bouncingBallsCanvas');
+        const ctx = canvas.getContext('2d');
+
+        
+        const balls = [];
+
+        
+        function createBall(x, y, radius, color, dx, dy) {
+            return {
+                x,
+                y,
+                radius,
+                color,
+                dx,
+                dy
+            };
+        }
+
+        
+        function drawBall(ball) {
+            ctx.beginPath();
+            ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+            ctx.fillStyle = ball.color;
+            ctx.fill();
+            ctx.closePath();
+        }
+
+        
+        function updateBall(ball) {
+            ball.x += ball.dx;
+            ball.y += ball.dy;
+
+            
+            if (ball.x - ball.radius < 0 || ball.x + ball.radius > canvas.width) {
+                ball.dx = -ball.dx;
+            }
+
+            if (ball.y - ball.radius < 0 || ball.y + ball.radius > canvas.height) {
+                ball.dy = -ball.dy;
+            }
+        }
+
+        
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (const ball of balls) {
+                drawBall(ball);
+                updateBall(ball);
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        
+        for (let i = 0; i < 5; i++) {
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * canvas.height;
+            const radius = 20;
+            const color = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
+            const dx = (Math.random() - 0.5) * 5; 
+            const dy = (Math.random() - 0.5) * 5; 
+
+            const ball = createBall(x, y, radius, color, dx, dy);
+            balls.push(ball);
+        }
+
+        animate();
+    </script>
+</body>
+</html>
